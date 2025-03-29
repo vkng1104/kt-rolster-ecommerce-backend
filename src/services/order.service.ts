@@ -5,13 +5,9 @@ import { Order } from '../entities/order.entity';
 import { OrderItem } from '../entities/order-item.entity';
 import { Cart } from '../entities/cart.entity';
 import { Product } from '../entities/product.entity';
-
-interface CreateOrderDto {
-  user_id: number;
-  cart_id: number;
-  shipping_method: string;
-  payment_type: string;
-}
+import { CartService } from './cart.service';
+import { ProductService } from './product.service';
+import { CreateOrderDto } from 'src/dtos/order.dto';
 
 @Injectable()
 export class OrderService {
@@ -20,10 +16,8 @@ export class OrderService {
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
-    @InjectRepository(Cart)
-    private readonly cartRepository: Repository<Cart>,
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
+    private readonly cartService: CartService,
+    private readonly productService: ProductService,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -34,10 +28,7 @@ export class OrderService {
 
     try {
       // Get cart with items
-      const cart = await this.cartRepository.findOne({
-        where: { cart_id: orderData.cart_id },
-        relations: ['cartItems', 'cartItems.product'],
-      });
+      const cart = await this.cartService.findOne(orderData.cart_id);
 
       if (!cart || !cart.cartItems.length) {
         throw new Error('Cart is empty');
@@ -73,9 +64,8 @@ export class OrderService {
 
       // Update product stock
       for (const cartItem of cart.cartItems) {
-        const product = await this.productRepository.findOne({
-          where: { product_id: cartItem.product_id },
-        });
+        const product = await this.productService.findOne(cartItem.product_id);
+
         if (product.stock_quantity < cartItem.quantity) {
           throw new Error(`Insufficient stock for product ${product.name}`);
         }
@@ -97,7 +87,7 @@ export class OrderService {
     }
   }
 
-  async findAll(userId?: number): Promise<Order[]> {
+  async findAll(userId?: string): Promise<Order[]> {
     const queryBuilder = this.orderRepository
       .createQueryBuilder('order')
       .leftJoinAndSelect('order.orderItems', 'orderItems')
@@ -112,14 +102,14 @@ export class OrderService {
     return queryBuilder.getMany();
   }
 
-  async findOne(id: number): Promise<Order> {
+  async findOne(id: string): Promise<Order> {
     return this.orderRepository.findOne({
       where: { order_id: id },
       relations: ['orderItems', 'orderItems.product', 'shipping', 'payment'],
     });
   }
 
-  async updateStatus(id: number, status: string): Promise<Order> {
+  async updateStatus(id: string, status: string): Promise<Order> {
     await this.orderRepository.update(id, { status });
     return this.findOne(id);
   }

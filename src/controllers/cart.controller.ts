@@ -42,7 +42,7 @@ export class CartController {
     const cart = await this.cartService.getOrCreateCart(req.user.id);
     return this.cartService.updateQuantity(
       cart.cart_id,
-      +productId,
+      productId,
       updateCartItemDto.quantity,
     );
   }
@@ -51,7 +51,7 @@ export class CartController {
   @Delete('items/:productId')
   async removeFromCart(@Request() req, @Param('productId') productId: string) {
     const cart = await this.cartService.getOrCreateCart(req.user.id);
-    return this.cartService.removeFromCart(cart.cart_id, +productId);
+    return this.cartService.removeFromCart(cart.cart_id, productId);
   }
 
   @UseGuards(JwtAuthGuard)

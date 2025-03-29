@@ -4,14 +4,14 @@ import { Sale } from './sale.entity';
 
 @Entity('product_sales')
 export class ProductSale {
-  @PrimaryGeneratedColumn()
-  product_sale_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  product_sale_id: string;
 
   @Column()
-  product_id: number;
+  product_id: string;
 
   @Column()
-  sale_id: number;
+  sale_id: string;
 
   @ManyToOne(() => Product, (product) => product.productSales)
   product: Product;

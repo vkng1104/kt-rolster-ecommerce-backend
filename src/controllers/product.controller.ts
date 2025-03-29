@@ -35,7 +35,7 @@ export class ProductController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+    return this.productService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -52,14 +52,14 @@ export class ProductController {
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
   ) {
-    return this.productService.update(+id, updateProductDto);
+    return this.productService.update(id, updateProductDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.productService.delete(+id);
+    return this.productService.delete(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -69,6 +69,6 @@ export class ProductController {
     @Param('id') id: string,
     @Body('quantity') quantity: number,
   ) {
-    return this.productService.updateStock(+id, quantity);
+    return this.productService.updateStock(id, quantity);
   }
 }

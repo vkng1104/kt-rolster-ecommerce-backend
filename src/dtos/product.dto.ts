@@ -5,15 +5,28 @@ import {
   Min,
   IsArray,
   IsUrl,
+  IsUUID,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateProductDto {
+  @IsUUID()
+  @IsOptional()
+  product_id?: string;
+
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  collection_ids?: string[];
+
   @IsString()
   name: string;
 
   @IsString()
   description: string;
+
+  @IsString()
+  slug: string;
 
   @IsNumber()
   @Min(0)
@@ -23,8 +36,8 @@ export class CreateProductDto {
   @Min(0)
   stock_quantity: number;
 
-  @IsNumber()
-  category_id: number;
+  @IsString()
+  category_id: string;
 
   @IsArray()
   @IsUrl({}, { each: true })
@@ -51,16 +64,20 @@ export class UpdateProductDto {
   @IsOptional()
   stock_quantity?: number;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  category_id?: number;
+  category_id?: string;
 }
 
 export class ProductFilterDto {
   @IsNumber()
   @IsOptional()
-  @Type(() => Number)
-  category?: number;
+  @Type(() => String)
+  category?: string;
+
+  @IsString()
+  @IsOptional()
+  slug?: string;
 
   @IsNumber()
   @IsOptional()

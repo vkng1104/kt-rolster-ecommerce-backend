@@ -6,12 +6,12 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { Product } from './product.entity';
+import { ProductCollection } from './product-collection.entity';
 
-@Entity('categories')
-export class Category {
+@Entity('collections')
+export class Collection {
   @PrimaryGeneratedColumn('uuid')
-  category_id: string;
+  collection_id: string;
 
   @Column({ length: 100 })
   name: string;
@@ -22,12 +22,18 @@ export class Category {
   @Column('text')
   description: string;
 
-  @OneToMany(() => Product, (product) => product.category)
-  products: Product[];
+  @Column({ default: true })
+  is_active: boolean;
 
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(
+    () => ProductCollection,
+    (productCollection) => productCollection.collection,
+  )
+  productCollections: ProductCollection[];
 }

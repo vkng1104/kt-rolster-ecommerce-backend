@@ -14,8 +14,8 @@ import { Favorite } from './favorite.entity';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
-  user_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  user_id: string;
 
   @Column({ length: 100 })
   role: string;

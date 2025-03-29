@@ -9,14 +9,14 @@ import { User } from './user.entity';
 
 @Entity('oauth_logins')
 export class OAuthLogin {
-  @PrimaryGeneratedColumn()
-  login_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  login_id: string;
 
   @Column()
-  user_id: number;
+  user_id: string;
 
   @Column()
-  provider_id: number;
+  provider_id: string;
 
   @CreateDateColumn()
   login_time: Date;

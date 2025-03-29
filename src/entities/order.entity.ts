@@ -14,17 +14,17 @@ import { Shipping } from './shipping.entity';
 
 @Entity('orders')
 export class Order {
-  @PrimaryGeneratedColumn()
-  order_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  order_id: string;
 
   @Column()
-  user_id: number;
+  user_id: string;
 
   @Column()
-  shipping_id: number;
+  shipping_id: string;
 
   @Column()
-  payment_id: number;
+  payment_id: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
   total_price: number;

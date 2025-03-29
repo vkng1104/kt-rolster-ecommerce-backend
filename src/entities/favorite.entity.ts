@@ -10,14 +10,14 @@ import { Product } from './product.entity';
 
 @Entity('favorites')
 export class Favorite {
-  @PrimaryGeneratedColumn()
-  favorite_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  favorite_id: string;
 
   @Column()
-  user_id: number;
+  user_id: string;
 
   @Column()
-  product_id: number;
+  product_id: string;
 
   @CreateDateColumn()
   added_at: Date;

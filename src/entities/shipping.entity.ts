@@ -3,8 +3,8 @@ import { Order } from './order.entity';
 
 @Entity('shipping')
 export class Shipping {
-  @PrimaryGeneratedColumn()
-  shipping_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  shipping_id: string;
 
   @Column({ length: 50 })
   method: string;

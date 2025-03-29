@@ -13,14 +13,18 @@ import { Favorite } from './favorite.entity';
 import { OrderItem } from './order-item.entity';
 import { ProductImage } from './product-image.entity';
 import { ProductSale } from './product-sale.entity';
+import { ProductCollection } from './product-collection.entity';
 
 @Entity('products')
 export class Product {
-  @PrimaryGeneratedColumn()
-  product_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  product_id: string;
 
-  @Column({ length: 150 })
+  @Column({ length: 100 })
   name: string;
+
+  @Column({ length: 255 })
+  slug: string;
 
   @Column('text')
   description: string;
@@ -32,7 +36,7 @@ export class Product {
   stock_quantity: number;
 
   @Column()
-  category_id: number;
+  category_id: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -57,4 +61,10 @@ export class Product {
 
   @OneToMany(() => ProductSale, (productSale) => productSale.product)
   productSales: ProductSale[];
+
+  @OneToMany(
+    () => ProductCollection,
+    (productCollection) => productCollection.product,
+  )
+  productCollections: ProductCollection[];
 }

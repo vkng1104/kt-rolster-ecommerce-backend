@@ -9,11 +9,11 @@ import { Order } from './order.entity';
 
 @Entity('payments')
 export class Payment {
-  @PrimaryGeneratedColumn()
-  payment_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  payment_id: string;
 
   @Column()
-  order_id: number;
+  order_id: string;
 
   @Column({ length: 50 })
   payment_type: string;

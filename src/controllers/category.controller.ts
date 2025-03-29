@@ -23,14 +23,9 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
-  @Get('hierarchy')
-  async getHierarchy() {
-    return this.categoryService.getHierarchy();
-  }
-
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
+    return this.categoryService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -47,13 +42,13 @@ export class CategoryController {
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoryService.update(+id, updateCategoryDto);
+    return this.categoryService.update(id, updateCategoryDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.categoryService.delete(+id);
+    return this.categoryService.delete(id);
   }
 }

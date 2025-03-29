@@ -2,21 +2,35 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
+import { ProductCollection } from '../entities/product-collection.entity';
+import { CreateProductDto } from 'src/dtos/product.dto';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+
+    @InjectRepository(ProductCollection)
+    private readonly productCollectionRepository: Repository<ProductCollection>,
   ) {}
 
-  async create(productData: Partial<Product>): Promise<Product> {
+  async create(productData: CreateProductDto): Promise<Product> {
     const product = this.productRepository.create(productData);
+
+    const productCollections = productData.collection_ids.map((collectionId) =>
+      this.productCollectionRepository.create({
+        product_id: product.product_id,
+        collection_id: collectionId,
+      }),
+    );
+    await this.productCollectionRepository.save(productCollections);
+
     return this.productRepository.save(product);
   }
 
   async findAll(options?: {
-    category?: number;
+    category?: string;
     minPrice?: number;
     maxPrice?: number;
     inStock?: boolean;
@@ -51,23 +65,23 @@ export class ProductService {
     return queryBuilder.getMany();
   }
 
-  async findOne(id: number): Promise<Product> {
+  async findOne(id: string): Promise<Product> {
     return this.productRepository.findOne({
       where: { product_id: id },
       relations: ['category', 'images', 'productSales'],
     });
   }
 
-  async update(id: number, productData: Partial<Product>): Promise<Product> {
+  async update(id: string, productData: Partial<Product>): Promise<Product> {
     await this.productRepository.update(id, productData);
     return this.findOne(id);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.productRepository.delete(id);
   }
 
-  async updateStock(id: number, quantity: number): Promise<Product> {
+  async updateStock(id: string, quantity: number): Promise<Product> {
     const product = await this.findOne(id);
     product.stock_quantity += quantity;
     return this.productRepository.save(product);

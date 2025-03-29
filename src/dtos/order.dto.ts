@@ -22,6 +22,12 @@ export enum ShippingMethod {
 
 export class CreateOrderDto {
   @IsString()
+  user_id: string;
+
+  @IsString()
+  cart_id: string;
+
+  @IsString()
   @IsEnum(PaymentType)
   payment_type: PaymentType;
 

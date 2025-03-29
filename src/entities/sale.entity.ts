@@ -9,8 +9,8 @@ import { ProductSale } from './product-sale.entity';
 
 @Entity('sales')
 export class Sale {
-  @PrimaryGeneratedColumn()
-  sale_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  sale_id: string;
 
   @Column({ length: 50 })
   code: string;

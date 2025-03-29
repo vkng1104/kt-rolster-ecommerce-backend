@@ -4,14 +4,14 @@ import { Product } from './product.entity';
 
 @Entity('order_items')
 export class OrderItem {
-  @PrimaryGeneratedColumn()
-  order_item_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  order_item_id: string;
 
   @Column()
-  order_id: number;
+  order_id: string;
 
   @Column()
-  product_id: number;
+  product_id: string;
 
   @Column()
   quantity: number;

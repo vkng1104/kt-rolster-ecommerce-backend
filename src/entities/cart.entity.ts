@@ -12,11 +12,11 @@ import { CartItem } from './cart-item.entity';
 
 @Entity('carts')
 export class Cart {
-  @PrimaryGeneratedColumn()
-  cart_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  cart_id: string;
 
   @Column()
-  user_id: number;
+  user_id: string;
 
   @CreateDateColumn()
   created_at: Date;

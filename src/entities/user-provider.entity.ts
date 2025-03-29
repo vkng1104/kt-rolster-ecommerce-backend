@@ -10,11 +10,11 @@ import { User } from './user.entity';
 
 @Entity('user_providers')
 export class UserProvider {
-  @PrimaryGeneratedColumn()
-  user_provider_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  user_provider_id: string;
 
   @Column()
-  user_id: number;
+  user_id: string;
 
   @Column()
   provider_id: string;

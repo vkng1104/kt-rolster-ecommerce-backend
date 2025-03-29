@@ -21,36 +21,19 @@ export class CategoryService {
     });
   }
 
-  async findOne(id: number): Promise<Category> {
+  async findOne(id: string): Promise<Category> {
     return this.categoryRepository.findOne({
       where: { category_id: id },
       relations: ['products'],
     });
   }
 
-  async update(id: number, categoryData: Partial<Category>): Promise<Category> {
+  async update(id: string, categoryData: Partial<Category>): Promise<Category> {
     await this.categoryRepository.update(id, categoryData);
     return this.findOne(id);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.categoryRepository.delete(id);
-  }
-
-  async getHierarchy(): Promise<Category[]> {
-    const categories = await this.categoryRepository.find();
-    return this.buildHierarchy(categories);
-  }
-
-  private buildHierarchy(
-    categories: Category[],
-    parentId: number = null,
-  ): Category[] {
-    return categories
-      .filter((category) => category.parent_category_id === parentId)
-      .map((category) => ({
-        ...category,
-        children: this.buildHierarchy(categories, category.category_id),
-      }));
   }
 }

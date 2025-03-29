@@ -4,7 +4,7 @@ import { UserService } from '../services/user.service';
 import { User } from '../entities/user.entity';
 
 export interface JwtPayload {
-  sub: number;
+  sub: string;
   email: string;
   role: string;
 }

@@ -3,13 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cart } from '../entities/cart.entity';
 import { CartItem } from '../entities/cart-item.entity';
-import { Product } from '../entities/product.entity';
-
-interface AddToCartDto {
-  user_id: number;
-  product_id: number;
-  quantity: number;
-}
+import { ProductService } from './product.service';
+import { AddToCartDto } from 'src/dtos/cart.dto';
 
 @Injectable()
 export class CartService {
@@ -18,11 +13,10 @@ export class CartService {
     private readonly cartRepository: Repository<Cart>,
     @InjectRepository(CartItem)
     private readonly cartItemRepository: Repository<CartItem>,
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
+    private readonly productService: ProductService,
   ) {}
 
-  async getOrCreateCart(userId: number): Promise<Cart> {
+  async getOrCreateCart(userId: string): Promise<Cart> {
     let cart = await this.cartRepository.findOne({
       where: { user_id: userId },
       relations: ['cartItems', 'cartItems.product'],
@@ -40,9 +34,7 @@ export class CartService {
     const { user_id, product_id, quantity } = addToCartDto;
 
     // Check product availability
-    const product = await this.productRepository.findOne({
-      where: { product_id },
-    });
+    const product = await this.productService.findOne(product_id);
 
     if (!product) {
       throw new Error('Product not found');
@@ -77,7 +69,7 @@ export class CartService {
     return this.findOne(cart.cart_id);
   }
 
-  async findOne(cartId: number): Promise<Cart> {
+  async findOne(cartId: string): Promise<Cart> {
     return this.cartRepository.findOne({
       where: { cart_id: cartId },
       relations: ['cartItems', 'cartItems.product'],
@@ -85,8 +77,8 @@ export class CartService {
   }
 
   async updateQuantity(
-    cartId: number,
-    productId: number,
+    cartId: string,
+    productId: string,
     quantity: number,
   ): Promise<Cart> {
     const cartItem = await this.cartItemRepository.findOne({
@@ -107,7 +99,7 @@ export class CartService {
     return this.findOne(cartId);
   }
 
-  async removeFromCart(cartId: number, productId: number): Promise<Cart> {
+  async removeFromCart(cartId: string, productId: string): Promise<Cart> {
     await this.cartItemRepository.delete({
       cart_id: cartId,
       product_id: productId,
@@ -115,7 +107,7 @@ export class CartService {
     return this.findOne(cartId);
   }
 
-  async clearCart(cartId: number): Promise<void> {
+  async clearCart(cartId: string): Promise<void> {
     await this.cartItemRepository.delete({ cart_id: cartId });
   }
 }
