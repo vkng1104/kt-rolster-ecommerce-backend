@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
 import { Order } from './order.entity';
@@ -15,6 +16,9 @@ import { Favorite } from './favorite.entity';
 export class User {
   @PrimaryGeneratedColumn()
   user_id: number;
+
+  @Column({ length: 100 })
+  role: string;
 
   @Column({ length: 100 })
   name: string;
@@ -33,6 +37,9 @@ export class User {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];

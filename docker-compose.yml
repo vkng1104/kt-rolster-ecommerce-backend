@@ -1,0 +1,19 @@
+version: '3.8'  # Specify the version of Docker Compose
+
+services:
+  postgres:
+    image: postgres:13   # Use the official PostgreSQL 13 image
+    container_name: kt-rolster-e-commerce-postgres
+    restart: always  # Ensure PostgreSQL restarts if it crashes
+    environment:
+      POSTGRES_USER: local       # Set the default PostgreSQL user
+      POSTGRES_PASSWORD: local   # Set the default PostgreSQL password
+      POSTGRES_DB: kt-rolster-e-commerce       # Set the default PostgreSQL database
+    ports:
+      - "2345:5432"  # Map port 5432 in the container to port 2345 on the host
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist data even after container is destroyed
+
+volumes:
+  postgres_data:
+    driver: local  # Use a local volume to persist data
