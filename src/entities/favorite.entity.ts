@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Product } from './product.entity';
@@ -23,8 +24,10 @@ export class Favorite {
   added_at: Date;
 
   @ManyToOne(() => User, (user) => user.favorites)
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @ManyToOne(() => Product)
+  @JoinColumn({ name: 'product_id' })
   product: Product;
 }

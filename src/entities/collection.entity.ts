@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { ProductCollection } from './product-collection.entity';
 
@@ -19,7 +20,7 @@ export class Collection {
   @Column({ length: 255 })
   slug: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   description: string;
 
   @Column({ default: true })
@@ -35,5 +36,6 @@ export class Collection {
     () => ProductCollection,
     (productCollection) => productCollection.collection,
   )
+  @JoinColumn({ name: 'collection_id' })
   productCollections: ProductCollection[];
 }

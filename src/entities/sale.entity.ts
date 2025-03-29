@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { ProductSale } from './product-sale.entity';
 
@@ -25,5 +26,6 @@ export class Sale {
   end_date: Date;
 
   @OneToMany(() => ProductSale, (productSale) => productSale.sale)
+  @JoinColumn({ name: 'sale_id' })
   productSales: ProductSale[];
 }

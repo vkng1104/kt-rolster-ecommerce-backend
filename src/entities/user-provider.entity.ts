@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 
@@ -44,5 +45,6 @@ export class UserProvider {
   updated_at: Date;
 
   @ManyToOne(() => User, (user) => user.userProviders)
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }

@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Order } from './order.entity';
 
@@ -28,5 +29,6 @@ export class Payment {
   transaction_date: Date;
 
   @OneToMany(() => Order, (order) => order.payment)
+  @JoinColumn({ name: 'payment_id' })
   orders: Order[];
 }

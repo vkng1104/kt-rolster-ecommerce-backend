@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Order } from './order.entity';
 import { Cart } from './cart.entity';
@@ -42,17 +43,22 @@ export class User {
   updated_at: Date;
 
   @OneToMany(() => Order, (order) => order.user)
+  @JoinColumn({ name: 'user_id' })
   orders: Order[];
 
   @OneToMany(() => Cart, (cart) => cart.user)
+  @JoinColumn({ name: 'user_id' })
   carts: Cart[];
 
   @OneToMany(() => Favorite, (favorite) => favorite.user)
+  @JoinColumn({ name: 'user_id' })
   favorites: Favorite[];
 
   @OneToMany(() => UserProvider, (userProvider) => userProvider.user)
+  @JoinColumn({ name: 'user_id' })
   userProviders: UserProvider[];
 
   @OneToMany(() => OAuthLogin, (oauthLogin) => oauthLogin.user)
+  @JoinColumn({ name: 'user_id' })
   oauthLogins: OAuthLogin[];
 }

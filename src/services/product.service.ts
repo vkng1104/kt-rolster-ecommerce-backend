@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { ProductCollection } from '../entities/product-collection.entity';
 import { CreateProductDto } from 'src/dtos/product.dto';
@@ -13,20 +13,45 @@ export class ProductService {
 
     @InjectRepository(ProductCollection)
     private readonly productCollectionRepository: Repository<ProductCollection>,
+
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(productData: CreateProductDto): Promise<Product> {
-    const product = this.productRepository.create(productData);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    const productCollections = productData.collection_ids.map((collectionId) =>
-      this.productCollectionRepository.create({
-        product_id: product.product_id,
-        collection_id: collectionId,
-      }),
-    );
-    await this.productCollectionRepository.save(productCollections);
+    try {
+      // Create product
+      const product = queryRunner.manager.create(Product, productData);
+      await queryRunner.manager.save(Product, product);
 
-    return this.productRepository.save(product);
+      // Create product_collections
+      const productCollections = productData.collection_ids.map(
+        (collectionId) =>
+          queryRunner.manager.create(ProductCollection, {
+            product_id: product.product_id,
+            collection_id: collectionId,
+          }),
+      );
+
+      await queryRunner.manager.save(ProductCollection, productCollections);
+
+      // Commit transaction
+      await queryRunner.commitTransaction();
+
+      // Return product with relations (from main repo)
+      return this.findOne(product.product_id);
+    } catch (error) {
+      // Rollback on failure
+      await queryRunner.rollbackTransaction();
+      console.error('Product creation failed:', error);
+      throw error;
+    } finally {
+      // Always release the query runner
+      await queryRunner.release();
+    }
   }
 
   async findAll(options?: {
@@ -38,7 +63,8 @@ export class ProductService {
     const queryBuilder = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
-      .leftJoinAndSelect('product.images', 'images');
+      .leftJoinAndSelect('product.images', 'images')
+      .leftJoinAndSelect('product.productCollections', 'productCollections');
 
     if (options?.category) {
       queryBuilder.andWhere('product.category_id = :categoryId', {
@@ -68,7 +94,7 @@ export class ProductService {
   async findOne(id: string): Promise<Product> {
     return this.productRepository.findOne({
       where: { product_id: id },
-      relations: ['category', 'images', 'productSales'],
+      relations: ['category', 'images', 'productSales', 'productCollections'],
     });
   }
 

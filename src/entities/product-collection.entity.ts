@@ -5,6 +5,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   Column,
+  JoinColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { Collection } from './collection.entity';
@@ -21,9 +22,11 @@ export class ProductCollection {
   collection_id: string;
 
   @ManyToOne(() => Product, (product) => product.productCollections)
+  @JoinColumn({ name: 'product_id' })
   product: Product;
 
   @ManyToOne(() => Collection, (collection) => collection.productCollections)
+  @JoinColumn({ name: 'collection_id' })
   collection: Collection;
 
   @CreateDateColumn()

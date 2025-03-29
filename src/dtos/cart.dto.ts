@@ -2,9 +2,6 @@ import { IsString, IsNumber, Min } from 'class-validator';
 
 export class AddToCartDto {
   @IsString()
-  user_id: string;
-
-  @IsString()
   product_id: string;
 
   @IsNumber()
@@ -13,6 +10,9 @@ export class AddToCartDto {
 }
 
 export class UpdateCartItemDto {
+  @IsString()
+  product_id: string;
+
   @IsNumber()
   @Min(0)
   quantity: number;

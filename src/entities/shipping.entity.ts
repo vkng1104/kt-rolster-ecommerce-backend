@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { Order } from './order.entity';
 
 @Entity('shipping')
@@ -16,5 +22,6 @@ export class Shipping {
   estimated_delivery_time: string;
 
   @OneToMany(() => Order, (order) => order.shipping)
+  @JoinColumn({ name: 'shipping_id' })
   orders: Order[];
 }

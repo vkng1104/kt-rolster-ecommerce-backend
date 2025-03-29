@@ -26,23 +26,19 @@ export class CartController {
   @UseGuards(JwtAuthGuard)
   @Post('items')
   async addToCart(@Request() req, @Body() addToCartDto: AddToCartDto) {
-    return this.cartService.addToCart({
-      user_id: req.user.id,
-      ...addToCartDto,
-    });
+    return this.cartService.addToCart(req.user.id, addToCartDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('items/:productId')
   async updateCartItem(
     @Request() req,
-    @Param('productId') productId: string,
     @Body() updateCartItemDto: UpdateCartItemDto,
   ) {
     const cart = await this.cartService.getOrCreateCart(req.user.id);
     return this.cartService.updateQuantity(
       cart.cart_id,
-      productId,
+      updateCartItemDto.product_id,
       updateCartItemDto.quantity,
     );
   }

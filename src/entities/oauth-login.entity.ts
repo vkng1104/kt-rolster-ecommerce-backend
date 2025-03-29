@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 
@@ -31,5 +32,6 @@ export class OAuthLogin {
   ip_address: string;
 
   @ManyToOne(() => User, (user) => user.oauthLogins)
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }

@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { CartItem } from './cart-item.entity';
@@ -22,21 +23,12 @@ export class Cart {
   created_at: Date;
 
   @ManyToOne(() => User, (user) => user.carts)
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @OneToMany(() => CartItem, (cartItem) => cartItem.cart)
+  @JoinColumn({ name: 'cart_id' })
   cartItems: CartItem[];
-
-  @Column({ type: 'jsonb' })
-  items: {
-    productId: string;
-    quantity: number;
-    price: number;
-    name: string;
-  }[];
-
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
-  totalAmount: number;
 
   @Column({ default: true })
   isActive: boolean;

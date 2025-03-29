@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { OrderItem } from './order-item.entity';
@@ -39,14 +40,18 @@ export class Order {
   updated_at: Date;
 
   @ManyToOne(() => User, (user) => user.orders)
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  @JoinColumn({ name: 'order_id' })
   orderItems: OrderItem[];
 
   @ManyToOne(() => Payment, (payment) => payment.orders)
+  @JoinColumn({ name: 'payment_id' })
   payment: Payment;
 
   @ManyToOne(() => Shipping, (shipping) => shipping.orders)
+  @JoinColumn({ name: 'shipping_id' })
   shipping: Shipping;
 }

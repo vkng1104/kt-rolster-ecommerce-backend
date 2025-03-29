@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
 
@@ -19,10 +20,11 @@ export class Category {
   @Column({ length: 255 })
   slug: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   description: string;
 
   @OneToMany(() => Product, (product) => product.category)
+  @JoinColumn({ name: 'category_id' })
   products: Product[];
 
   @CreateDateColumn()

@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Category } from './category.entity';
 import { CartItem } from './cart-item.entity';
@@ -26,7 +27,7 @@ export class Product {
   @Column({ length: 255 })
   slug: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   description: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
@@ -45,26 +46,33 @@ export class Product {
   updated_at: Date;
 
   @ManyToOne(() => Category, (category) => category.products)
+  @JoinColumn({ name: 'category_id' })
   category: Category;
 
   @OneToMany(() => ProductImage, (productImage) => productImage.product)
+  @JoinColumn({ name: 'product_id' })
   images: ProductImage[];
 
   @OneToMany(() => CartItem, (cartItem) => cartItem.product)
+  @JoinColumn({ name: 'product_id' })
   cartItems: CartItem[];
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+  @JoinColumn({ name: 'product_id' })
   orderItems: OrderItem[];
 
   @OneToMany(() => Favorite, (favorite) => favorite.product)
+  @JoinColumn({ name: 'product_id' })
   favorites: Favorite[];
 
   @OneToMany(() => ProductSale, (productSale) => productSale.product)
+  @JoinColumn({ name: 'product_id' })
   productSales: ProductSale[];
 
   @OneToMany(
     () => ProductCollection,
     (productCollection) => productCollection.product,
   )
+  @JoinColumn({ name: 'product_id' })
   productCollections: ProductCollection[];
 }
