@@ -30,7 +30,7 @@ export class CartController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('items/:productId')
+  @Put('items')
   async updateCartItem(
     @Request() req,
     @Body() updateCartItemDto: UpdateCartItemDto,

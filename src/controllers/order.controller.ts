@@ -24,12 +24,7 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Request() req, @Body() createOrderDto: CreateOrderDto) {
-    const cart = await this.cartService.getOrCreateCart(req.user.id);
-    return this.orderService.createOrder({
-      user_id: req.user.id,
-      cart_id: cart.cart_id,
-      ...createOrderDto,
-    });
+    return this.orderService.createOrder(req.user.id, createOrderDto);
   }
 
   @UseGuards(JwtAuthGuard)

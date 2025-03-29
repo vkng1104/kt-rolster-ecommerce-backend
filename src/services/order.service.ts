@@ -21,7 +21,10 @@ export class OrderService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async createOrder(orderData: CreateOrderDto): Promise<Order> {
+  async createOrder(
+    user_id: string,
+    orderData: CreateOrderDto,
+  ): Promise<Order> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -42,7 +45,7 @@ export class OrderService {
 
       // Create order
       const order = this.orderRepository.create({
-        user_id: orderData.user_id,
+        user_id,
         total_price: total,
         status: 'pending',
       });

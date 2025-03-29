@@ -21,10 +21,10 @@ export class Order {
   @Column()
   user_id: string;
 
-  @Column()
+  @Column({ nullable: true })
   shipping_id: string;
 
-  @Column()
+  @Column({ nullable: true })
   payment_id: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
